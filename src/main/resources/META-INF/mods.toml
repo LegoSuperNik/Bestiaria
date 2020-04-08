@@ -1,0 +1,41 @@
+
+modLoader="javafml" #mandatory
+
+loaderVersion="[31,)" #mandatory This is typically bumped every Minecraft version by Forge. See our download page for lists of versions.
+
+issueTrackerURL="http://my.issue.tracker/" #optional
+
+[[mods]] 
+
+modId="bestiaria" 
+
+version="1.0.0" 
+
+displayName="Bestiaria" 
+ 
+updateJSONURL="http://myurl.me"
+ 
+displayURL="http://myurl.me" 
+
+logoFile="examplemod.png"
+
+credits="" 
+
+authors="LegoSuperNik" 
+
+description='''
+Add some humanoid beasts
+'''
+[[dependencies.examplemod]] #optional
+    modId="forge" #mandatory
+    mandatory=true #mandatory
+    versionRange="[31,)" #mandatory
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.examplemod]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.15.2]"
+    ordering="NONE"
+    side="BOTH"
