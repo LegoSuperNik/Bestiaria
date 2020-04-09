@@ -1,10 +1,11 @@
 package com.lsn.bestiaria.client.entity.model;
 
+import com.google.common.collect.ImmutableList;
 import com.lsn.bestiaria.entities.Ratoner;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 
-import net.minecraft.client.renderer.entity.model.EntityModel;
+import net.minecraft.client.renderer.entity.model.AgeableModel;
 import net.minecraft.client.renderer.entity.model.IHasArm;
 import net.minecraft.client.renderer.entity.model.IHasHead;
 import net.minecraft.client.renderer.model.ModelRenderer;
@@ -15,7 +16,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class RatonerModel<T extends Ratoner> extends EntityModel<T> implements IHasArm, IHasHead{
+public class RatonerModel<T extends Ratoner> extends AgeableModel<T> implements IHasArm, IHasHead{
 	public RatonerModel.ArmPose leftArmPose = RatonerModel.ArmPose.EMPTY;
 	public RatonerModel.ArmPose rightArmPose = RatonerModel.ArmPose.EMPTY;
 	
@@ -267,14 +268,14 @@ public class RatonerModel<T extends Ratoner> extends EntityModel<T> implements I
 	      this.legr.rotateAngleY = 0.0F;
 	      this.legl.rotateAngleZ = 0.0F;
 	      this.legr.rotateAngleZ = 0.0F;
-	      this.legldown.rotateAngleX = MathHelper.cos(limbSwing * 2.25F) * 3.0F * limbSwingAmount / f;
-	      this.legrdown.rotateAngleX = MathHelper.cos(limbSwing * 2.25F + (float)Math.PI) * 3.0F * limbSwingAmount / f;
+	      this.legldown.rotateAngleX = MathHelper.cos(limbSwing * 2.25F + (float)Math.PI) * 3.0F * limbSwingAmount / f;
+	      this.legrdown.rotateAngleX = MathHelper.cos(limbSwing * 2.25F) * 3.0F * limbSwingAmount / f;
 	      this.legldown.rotateAngleY = 0.0F;
 	      this.legrdown.rotateAngleY = 0.0F;
 	      this.legldown.rotateAngleZ = 0.0F;
 	      this.legrdown.rotateAngleZ = 0.0F;
-	      this.bone.rotateAngleX = MathHelper.cos(limbSwing * 2.25F) * 1.4F * limbSwingAmount / f - 2.36F;
-	      this.bone2.rotateAngleX = MathHelper.cos(limbSwing * 2.25F + (float)Math.PI) * 1.4F * limbSwingAmount / f - 2.36F;
+	      this.bone.rotateAngleX = MathHelper.cos(limbSwing * 2.25F + (float)Math.PI) * 1.4F * limbSwingAmount / f - 2.36F;
+	      this.bone2.rotateAngleX = MathHelper.cos(limbSwing * 2.25F) * 1.4F * limbSwingAmount / f - 2.36F;
 	      this.bone.rotateAngleY = 0.0F;
 	      this.bone2.rotateAngleY = 0.0F;
 	      this.bone.rotateAngleZ = 0.0F;
@@ -287,7 +288,7 @@ public class RatonerModel<T extends Ratoner> extends EntityModel<T> implements I
 	      this.handl.rotateAngleZ = 0.0F;
 	      switch(this.leftArmPose) {
 	      case EMPTY:
-	         this.handl.rotateAngleY = 0.0F;
+	         this.handl.rotateAngleY = 0.5F;
 	         break;
 	      case BLOCK:
 	         this.handl.rotateAngleX = this.handl.rotateAngleX * 0.5F - 0.9424779F;
@@ -302,7 +303,7 @@ public class RatonerModel<T extends Ratoner> extends EntityModel<T> implements I
 
 	      switch(this.rightArmPose) {
 	      case EMPTY:
-	         this.handr.rotateAngleY = 0.0F;
+	         this.handr.rotateAngleY = 0.5F;
 	         break;
 	      case BLOCK:
 	         this.handr.rotateAngleX = this.handr.rotateAngleX * 0.5F - 0.9424779F;
@@ -334,11 +335,11 @@ public class RatonerModel<T extends Ratoner> extends EntityModel<T> implements I
 	      this.rightArmPose = RatonerModel.ArmPose.EMPTY;
 	      this.leftArmPose = RatonerModel.ArmPose.EMPTY;
 	      ItemStack itemstack = entityIn.getHeldItem(Hand.MAIN_HAND);
-	      if (itemstack.getItem() instanceof net.minecraft.item.BowItem && entityIn.isAggressive()) {
+	      if (itemstack.getItem() instanceof net.minecraft.item.Item && entityIn.isAggressive()) {
 	         if (entityIn.getPrimaryHand() == HandSide.RIGHT) {
-	            this.rightArmPose = RatonerModel.ArmPose.BOW_AND_ARROW;
+	            this.rightArmPose = RatonerModel.ArmPose.ITEM;
 	         } else {
-	            this.leftArmPose = RatonerModel.ArmPose.BOW_AND_ARROW;
+	            this.leftArmPose = RatonerModel.ArmPose.ITEM;
 	         }
 	      }
 
@@ -357,6 +358,10 @@ public class RatonerModel<T extends Ratoner> extends EntityModel<T> implements I
 	      modelrenderer.translateRotate(matrixStackIn);
 	      modelrenderer.rotationPointX -= f;
 	}
+	@SuppressWarnings("unused")
+	private float getArmAngleSq(float limbSwing) {
+	      return -65.0F * limbSwing + limbSwing * limbSwing;
+	   }
 	   public void setModelAttributes(RatonerModel<T> modelIn) {
 		      super.copyModelAttributesTo(modelIn);
 		      modelIn.leftArmPose = this.leftArmPose;
@@ -379,4 +384,18 @@ public class RatonerModel<T extends Ratoner> extends EntityModel<T> implements I
 	      CROSSBOW_CHARGE,
 	      CROSSBOW_HOLD;
 	   }
+	@Override
+	protected Iterable<ModelRenderer> getHeadParts() {
+		return ImmutableList.of(this.Head);
+	}
+
+	@Override
+	protected Iterable<ModelRenderer> getBodyParts() {
+		return ImmutableList.of(this.Arml, this.ArmLeft, this.Armr, this.ArmRight, this.Body, this.bodymid,
+				this.Bodyup, this.bone, this.bone2, this.EarLeft, this.EarRight,
+				this.Hair, this.handl, this.handr, this.legl, this.legldown,
+				this.LLeg, this.Mouth, this.legr,this.legrdown, this.mouthA,
+				this.Mouthdown, this.MouthL, this.Mouthr, this.Nose, this.RLeg, 
+				this.Tale, this.Tale2, this.Tale3, this.Tale4, this.Tale5);
+	}
 }
