@@ -1,114 +1,78 @@
 package com.lsn.bestiaria.entities;
 
 import javax.annotation.Nullable;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntitySize;
+
+import com.lsn.bestiaria.init.SoundInit;
+
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ILivingEntityData;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.Pose;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.monster.AbstractSkeletonEntity;
-import net.minecraft.entity.monster.CreeperEntity;
+import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
+import net.minecraft.entity.ai.goal.SwimGoal;
+import net.minecraft.entity.ai.goal.WaterAvoidingRandomWalkingGoal;
+import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
 import net.minecraft.entity.monster.MonsterEntity;
-import net.minecraft.entity.projectile.AbstractArrowEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
-import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
-public class Monsters extends AbstractSkeletonEntity {
-	
-   @SuppressWarnings("unchecked")
-public Monsters(EntityType<? extends MonsterEntity> type, World p_i48553_2_) 
+public class Monsters extends MonsterEntity
+{
+	@Override
+	protected void registerGoals() 
 	{
-		super((EntityType<? extends AbstractSkeletonEntity>) type, p_i48553_2_);
+		super.registerGoals();
+	    this.applyEntityAI();
+		this.goalSelector.addGoal(0, new SwimGoal(this));
 	}
-   protected SoundEvent getAmbientSound() {
-      return SoundEvents.ENTITY_WITHER_SKELETON_AMBIENT;
-   }
 
-   protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
-      return SoundEvents.ENTITY_WITHER_SKELETON_HURT;
-   }
+	protected void applyEntityAI() {
+	      this.goalSelector.addGoal(7, new WaterAvoidingRandomWalkingGoal(this, 0.6D));
+	      this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true));
+	      this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, AbstractVillagerEntity.class, false));
+	} 
 
-   protected SoundEvent getDeathSound() {
-      return SoundEvents.ENTITY_WITHER_SKELETON_DEATH;
-   }
+	@Override
+	protected void registerAttributes () {
+		super.registerAttributes();
+		this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(15.0D);
+		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.3D);
+	    this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(40.0D);
+	    this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(4.0D);
+	    this.getAttribute(SharedMonsterAttributes.ARMOR).setBaseValue(4.0D);
+		   }  
+	@Override
+	protected SoundEvent getAmbientSound() {
+		return SoundInit.AMBIENT.get();
+	}
+	public Monsters(final EntityType<? extends MonsterEntity> type, final World world)
+    {
+        super(type, world);
+        this.setInvulnerable(true);
+    }
+	protected void setEquipmentBasedOnDifficulty(DifficultyInstance difficulty) {
+	      this.setItemStackToSlot(EquipmentSlotType.MAINHAND, new ItemStack(Items.IRON_AXE));
+	   }
 
-   protected SoundEvent getStepSound() {
-      return SoundEvents.ENTITY_WITHER_SKELETON_STEP;
-   }
+	   protected void setEnchantmentBasedOnDifficulty(DifficultyInstance difficulty) {
+	   }
 
-   protected void dropSpecialItems(DamageSource source, int looting, boolean recentlyHitIn) {
-      super.dropSpecialItems(source, looting, recentlyHitIn);
-      Entity entity = source.getTrueSource();
-      if (entity instanceof CreeperEntity) {
-         CreeperEntity creeperentity = (CreeperEntity)entity;
-         if (creeperentity.ableToCauseSkullDrop()) {
-            creeperentity.incrementDroppedSkulls();
-            this.entityDropItem(Items.WITHER_SKELETON_SKULL);
-         }
-      }
+	   @Nullable
+	   public ILivingEntityData onInitialSpawn(IWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
+	      ILivingEntityData ilivingentitydata = super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
+	      this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(4.0D);
+	      return ilivingentitydata;
+	   }
+	   public static void setEquipment(Ratoner mob)
+	    {
+	        mob.setItemStackToSlot(EquipmentSlotType.MAINHAND, new ItemStack(Items.IRON_AXE));
+	    }
 
-   }
-
-   /**
-    * Gives armor or weapon for entity based on given DifficultyInstance
-    */
-   protected void setEquipmentBasedOnDifficulty(DifficultyInstance difficulty) {
-      this.setItemStackToSlot(EquipmentSlotType.MAINHAND, new ItemStack(Items.IRON_SWORD));
-   }
-
-   /**
-    * Enchants Entity's current equipments based on given DifficultyInstance
-    */
-   protected void setEnchantmentBasedOnDifficulty(DifficultyInstance difficulty) {
-   }
-
-   @Nullable
-   public ILivingEntityData onInitialSpawn(IWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
-      ILivingEntityData ilivingentitydata = super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
-      this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(4.0D);
-      this.setCombatTask();
-      return ilivingentitydata;
-   }
-
-   protected float getStandingEyeHeight(Pose poseIn, EntitySize sizeIn) {
-      return 2.1F;
-   }
-
-   public boolean attackEntityAsMob(Entity entityIn) {
-      if (!super.attackEntityAsMob(entityIn)) {
-         return false;
-      } else {
-         if (entityIn instanceof LivingEntity) {
-            ((LivingEntity)entityIn).addPotionEffect(new EffectInstance(Effects.WITHER, 200));
-         }
-
-         return true;
-      }
-   }
-
-   /**
-    * Fires an arrow
-    */
-   protected AbstractArrowEntity fireArrow(ItemStack arrowStack, float distanceFactor) {
-      AbstractArrowEntity abstractarrowentity = super.fireArrow(arrowStack, distanceFactor);
-      abstractarrowentity.setFire(100);
-      return abstractarrowentity;
-   }
-
-   public boolean isPotionApplicable(EffectInstance potioneffectIn) {
-      return potioneffectIn.getPotion() == Effects.WITHER ? false : super.isPotionApplicable(potioneffectIn);
-   }
 }

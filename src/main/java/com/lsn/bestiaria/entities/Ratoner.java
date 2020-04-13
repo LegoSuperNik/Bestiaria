@@ -1,6 +1,5 @@
 package com.lsn.bestiaria.entities;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.lsn.bestiaria.init.SoundInit;
@@ -23,7 +22,6 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
-import net.minecraftforge.items.IItemHandler;
 
 public class Ratoner extends MonsterEntity
 {
@@ -48,46 +46,38 @@ public class Ratoner extends MonsterEntity
 		this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(15.0D);
 		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.3D);
 	    this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(40.0D);
-	    this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(3.0D);
+	    this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(4.0D);
 	    this.getAttribute(SharedMonsterAttributes.ARMOR).setBaseValue(4.0D);
 		   }  
 	@Override
 	protected SoundEvent getAmbientSound() {
 		return SoundInit.AMBIENT.get();
 	}
-    @Override
-    public ILivingEntityData onInitialSpawn(
-      final IWorld worldIn, final DifficultyInstance difficultyIn, final SpawnReason reason, @Nullable final ILivingEntityData spawnDataIn, @Nullable final CompoundNBT dataTag)
-    {
-        Ratoner.setEquipment(this);
-        return super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
-    }
-    public static void setEquipment(Ratoner mob)
-    {
-        mob.setItemStackToSlot(EquipmentSlotType.MAINHAND, new ItemStack(Items.IRON_AXE));
-    }
 	public Ratoner(final EntityType<? extends MonsterEntity> type, final World world)
     {
         super(type, world);
         this.setInvulnerable(true);
-        Ratoner.setEquipment(this);
     }
-    @Override
-    public boolean canPickUpLoot()
-    {
-        return true;
-    }
-    public boolean checkCanDropLoot()
-    {
-        return canDropLoot();
-    }
-    @Nonnull
-    public IItemHandler getItemHandlerRatoner() 
-    {
-		return getInventoryRatoner();
-	}
+	protected void setEquipmentBasedOnDifficulty(DifficultyInstance difficulty) {
+	      this.setItemStackToSlot(EquipmentSlotType.MAINHAND, new ItemStack(Items.IRON_AXE));
+	   }
+	
+	   protected void setEnchantmentBasedOnDifficulty(DifficultyInstance difficulty) {
+	   }
 
-	private IItemHandler getInventoryRatoner() {
-		return null;
-	}
+	   @Nullable
+	   public ILivingEntityData onInitialSpawn(IWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
+	      ILivingEntityData ilivingentitydata = super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
+	      this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(4.0D);
+	      this.setEquipmentBasedOnDifficulty(difficultyIn);	      
+	      return ilivingentitydata;
+	   }
+	   public static void setEquipment(Ratoner mob)
+	    {
+	        mob.setItemStackToSlot(EquipmentSlotType.MAINHAND, new ItemStack(Items.IRON_AXE));
+	    }
+	   public boolean checkCanDropLoot()
+	    {
+	        return canDropLoot();
+	    }
 }

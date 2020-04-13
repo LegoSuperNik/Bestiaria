@@ -1,22 +1,22 @@
 package com.lsn.bestiaria.client.entity.model;
 
 import com.google.common.collect.ImmutableList;
-import com.lsn.bestiaria.entities.Ratoner;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
-
 import net.minecraft.client.renderer.entity.model.AgeableModel;
 import net.minecraft.client.renderer.entity.model.IHasArm;
 import net.minecraft.client.renderer.entity.model.IHasHead;
 import net.minecraft.client.renderer.model.ModelRenderer;
-import net.minecraft.item.ItemStack;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.Hand;
 import net.minecraft.util.HandSide;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraft.item.ItemStack;
 
-public class RatonerModel<T extends Ratoner> extends AgeableModel<T> implements IHasArm, IHasHead{
+@OnlyIn(Dist.CLIENT)
+public class RatonerModel<T extends LivingEntity> extends AgeableModel<T> implements IHasArm, IHasHead{
 	public RatonerModel.ArmPose leftArmPose = RatonerModel.ArmPose.EMPTY;
 	public RatonerModel.ArmPose rightArmPose = RatonerModel.ArmPose.EMPTY;
 	
@@ -255,32 +255,41 @@ public class RatonerModel<T extends Ratoner> extends AgeableModel<T> implements 
 	      if (f < 1.0F) {
 	         f = 1.0F;
 	      }
-
-	      this.LLeg.rotateAngleX = MathHelper.cos(limbSwing *  2.25F) * 3.0F * limbSwingAmount / f + 0.5F;
-	      this.RLeg.rotateAngleX = MathHelper.cos(limbSwing * 2.25F + (float)Math.PI) * 3.0F * limbSwingAmount / f + 0.5F;
+ 
+	      this.LLeg.rotateAngleX = MathHelper.cos(limbSwing *  0.75F) * 0.5F * limbSwingAmount / f + 0.7F;
+	      this.RLeg.rotateAngleX = MathHelper.cos(limbSwing * 0.75F + (float)Math.PI) * 1.0F * limbSwingAmount / f + 0.7F;
 	      this.LLeg.rotateAngleY = -0.2F;
 	      this.RLeg.rotateAngleY = 0.2F;
 	      this.LLeg.rotateAngleZ = 0.0F;
 	      this.RLeg.rotateAngleZ = 0.0F;
-	      this.legl.rotateAngleX = MathHelper.cos(limbSwing * 2.25F) * 6.0F * limbSwingAmount / f + 0.3F;
-	      this.legr.rotateAngleX = MathHelper.cos(limbSwing * 2.25F + (float)Math.PI) * 6.0F * limbSwingAmount / f + 0.3F;
+	      this.legl.rotateAngleX = MathHelper.cos(limbSwing * 0.75F) * 0.5F * limbSwingAmount / f + 0.5F;
+	      this.legr.rotateAngleX = MathHelper.cos(limbSwing * 0.75F + (float)Math.PI) * 0.5F * limbSwingAmount / f + 0.5F;
 	      this.legl.rotateAngleY = 0.0F;
 	      this.legr.rotateAngleY = 0.0F;
 	      this.legl.rotateAngleZ = 0.0F;
 	      this.legr.rotateAngleZ = 0.0F;
-	      this.legldown.rotateAngleX = MathHelper.cos(limbSwing * 2.25F + (float)Math.PI) * 3.0F * limbSwingAmount / f;
-	      this.legrdown.rotateAngleX = MathHelper.cos(limbSwing * 2.25F) * 3.0F * limbSwingAmount / f;
+	      this.legldown.rotateAngleX = MathHelper.cos(limbSwing * 0.75F + (float)Math.PI) * 0.5F * limbSwingAmount / f;
+	      this.legrdown.rotateAngleX = MathHelper.cos(limbSwing * 0.75F) * 0.5F * limbSwingAmount / f;
 	      this.legldown.rotateAngleY = 0.0F;
 	      this.legrdown.rotateAngleY = 0.0F;
 	      this.legldown.rotateAngleZ = 0.0F;
 	      this.legrdown.rotateAngleZ = 0.0F;
-	      this.bone.rotateAngleX = MathHelper.cos(limbSwing * 2.25F + (float)Math.PI) * 1.4F * limbSwingAmount / f - 2.36F;
-	      this.bone2.rotateAngleX = MathHelper.cos(limbSwing * 2.25F) * 1.4F * limbSwingAmount / f - 2.36F;
+	      this.bone.rotateAngleX = MathHelper.cos(limbSwing * 0.75F + (float)Math.PI) * 0.5F * limbSwingAmount / f + 3.5F;
+	      this.bone2.rotateAngleX = MathHelper.cos(limbSwing * 0.75F) * 0.5F * limbSwingAmount / f + 3.5F;
 	      this.bone.rotateAngleY = 0.0F;
 	      this.bone2.rotateAngleY = 0.0F;
 	      this.bone.rotateAngleZ = 0.0F;
 	      this.bone2.rotateAngleZ = 0.0F;
-
+	      
+	      /**TEST ROTATION FOR HANDS
+	      
+	      this.handl.rotateAngleX = MathHelper.cos(limbSwing * 0.75F + (float)Math.PI) * 1.4F * limbSwingAmount / f - 2.36F;
+	      this.handr.rotateAngleX = MathHelper.cos(limbSwing * 0.75F) * 1.4F * limbSwingAmount / f - 2.36F;
+	      this.handl.rotateAngleY = 0.0F;
+	      this.handr.rotateAngleY = 0.0F;
+	      this.handl.rotateAngleZ = 0.0F;
+	      this.handr.rotateAngleZ = 0.0F;
+	      */
 	      this.Head.rotateAngleY = netHeadYaw * ((float)Math.PI / 180F);
 	      this.Head.rotateAngleX = headPitch * ((float)Math.PI / 180F);
 
@@ -288,7 +297,7 @@ public class RatonerModel<T extends Ratoner> extends AgeableModel<T> implements 
 	      this.handl.rotateAngleZ = 0.0F;
 	      switch(this.leftArmPose) {
 	      case EMPTY:
-	         this.handl.rotateAngleY = 0.5F;
+	         this.handl.rotateAngleY = 0.0F;
 	         break;
 	      case BLOCK:
 	         this.handl.rotateAngleX = this.handl.rotateAngleX * 0.5F - 0.9424779F;
@@ -303,7 +312,7 @@ public class RatonerModel<T extends Ratoner> extends AgeableModel<T> implements 
 
 	      switch(this.rightArmPose) {
 	      case EMPTY:
-	         this.handr.rotateAngleY = 0.5F;
+	         this.handr.rotateAngleY = 0.0F;
 	         break;
 	      case BLOCK:
 	         this.handr.rotateAngleX = this.handr.rotateAngleX * 0.5F - 0.9424779F;
@@ -329,13 +338,12 @@ public class RatonerModel<T extends Ratoner> extends AgeableModel<T> implements 
 		modelRenderer.rotateAngleY = y;
 		modelRenderer.rotateAngleZ = z;
 	}
-	/**for items in hand(don't work):*/
 	@Override
 	 public void setLivingAnimations(T entityIn, float limbSwing, float limbSwingAmount, float partialTick) {
 	      this.rightArmPose = RatonerModel.ArmPose.EMPTY;
 	      this.leftArmPose = RatonerModel.ArmPose.EMPTY;
-	      ItemStack itemstack = entityIn.getHeldItem(Hand.MAIN_HAND);
-	      if (itemstack.getItem() instanceof net.minecraft.item.Item && entityIn.isAggressive()) {
+	      ItemStack itemstack = ((LivingEntity) entityIn).getHeldItem(Hand.MAIN_HAND);
+	      if (itemstack.getItem() instanceof net.minecraft.item.Item && entityIn.isAlive()) {
 	         if (entityIn.getPrimaryHand() == HandSide.RIGHT) {
 	            this.rightArmPose = RatonerModel.ArmPose.ITEM;
 	         } else {
@@ -350,14 +358,27 @@ public class RatonerModel<T extends Ratoner> extends AgeableModel<T> implements 
 		return this.Head;
 	}
 
-	@Override
 	public void translateHand(HandSide sideIn, MatrixStack matrixStackIn) {
+		 this.getArmForSide(sideIn).translateRotate(matrixStackIn);
 		 float f = sideIn == HandSide.RIGHT ? 1.0F : -1.0F;
 	      ModelRenderer modelrenderer = this.getArmForSide(sideIn);
 	      modelrenderer.rotationPointX += f;
 	      modelrenderer.translateRotate(matrixStackIn);
 	      modelrenderer.rotationPointX -= f;
 	}
+	protected float rotLerpRad(float angleIn, float maxAngleIn, float mulIn) {
+	      float f = (maxAngleIn - angleIn) % ((float)Math.PI * 2F);
+	      if (f < -(float)Math.PI) {
+	         f += ((float)Math.PI * 2F);
+	      }
+
+	      if (f >= (float)Math.PI) {
+	         f -= ((float)Math.PI * 2F);
+	      }
+
+	      return angleIn + mulIn * f;
+	   }
+
 	@SuppressWarnings("unused")
 	private float getArmAngleSq(float limbSwing) {
 	      return -65.0F * limbSwing + limbSwing * limbSwing;
@@ -365,7 +386,7 @@ public class RatonerModel<T extends Ratoner> extends AgeableModel<T> implements 
 	   public void setModelAttributes(RatonerModel<T> modelIn) {
 		      super.copyModelAttributesTo(modelIn);
 		      modelIn.leftArmPose = this.leftArmPose;
-		      modelIn.rightArmPose = this.leftArmPose;
+		      modelIn.rightArmPose = this.rightArmPose;
 		   }
 	protected ModelRenderer getArmForSide(HandSide side) {
 	      return side == HandSide.LEFT ? this.handl : this.handr;
@@ -388,7 +409,6 @@ public class RatonerModel<T extends Ratoner> extends AgeableModel<T> implements 
 	protected Iterable<ModelRenderer> getHeadParts() {
 		return ImmutableList.of(this.Head);
 	}
-
 	@Override
 	protected Iterable<ModelRenderer> getBodyParts() {
 		return ImmutableList.of(this.Arml, this.ArmLeft, this.Armr, this.ArmRight, this.Body, this.bodymid,

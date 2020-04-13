@@ -1,11 +1,9 @@
 package com.lsn.bestiaria.client.entity.model;
 
+import com.lsn.bestiaria.entities.Monsters;
 import com.mojang.blaze3d.matrix.MatrixStack;
 
-import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
-import net.minecraft.entity.IRangedAttackMob;
-import net.minecraft.entity.MobEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Hand;
 import net.minecraft.util.HandSide;
@@ -14,7 +12,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class monster<T extends MobEntity & IRangedAttackMob> extends BipedModel<T> {
+public class monster<T extends Monsters> extends BM<T> {
    public monster() {
       this(0.0F, false);
    }
@@ -41,14 +39,14 @@ public class monster<T extends MobEntity & IRangedAttackMob> extends BipedModel<
    }
 
    public void setLivingAnimations(T entityIn, float limbSwing, float limbSwingAmount, float partialTick) {
-      this.rightArmPose = BipedModel.ArmPose.EMPTY;
-      this.leftArmPose = BipedModel.ArmPose.EMPTY;
+      this.rightArmPose = BM.ArmPose.EMPTY;
+      this.leftArmPose = BM.ArmPose.EMPTY;
       ItemStack itemstack = entityIn.getHeldItem(Hand.MAIN_HAND);
-      if (itemstack.getItem() instanceof net.minecraft.item.BowItem && entityIn.isAggressive()) {
+      if (itemstack.getItem() instanceof net.minecraft.item.Item && entityIn.isAggressive()) {
          if (entityIn.getPrimaryHand() == HandSide.RIGHT) {
-            this.rightArmPose = BipedModel.ArmPose.BOW_AND_ARROW;
+            this.rightArmPose = BM.ArmPose.ITEM;
          } else {
-            this.leftArmPose = BipedModel.ArmPose.BOW_AND_ARROW;
+            this.leftArmPose = BM.ArmPose.ITEM;
          }
       }
 

@@ -19,7 +19,7 @@ public class ModEntityTypes {
 	public static final RegistryObject<EntityType<Ratoner>> RATONER = ENTITY_TYPES
 			.register("ratoner",
 					() -> EntityType.Builder.<Ratoner>create(Ratoner::new, EntityClassification.CREATURE)
-							.size(0.7f, 1.3f)
+							.size(0.7f, 1.2f)
 							.build(new ResourceLocation(Bestiaria.MOD_ID, "monster").toString()));
 	public static final RegistryObject<EntityType<Monsters>> MONSTERS = ENTITY_TYPES
 			.register("monster",
