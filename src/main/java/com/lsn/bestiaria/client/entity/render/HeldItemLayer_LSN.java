@@ -42,7 +42,7 @@ public class HeldItemLayer_LSN<T extends LivingEntity, M extends EntityModel<T> 
          p_229135_5_.rotate(Vector3f.XP.rotationDegrees(-90.0F));
          p_229135_5_.rotate(Vector3f.YP.rotationDegrees(180.0F));
          boolean flag = p_229135_4_ == HandSide.LEFT;
-         p_229135_5_.translate((double)((float)(flag ? -1 : 1) / 56.0F), 0.0D, 0.0D);
+         p_229135_5_.translate((double)((float)(flag ? -1 : 1) / 16.0F), 0.0D, 0.0D);
          Minecraft.getInstance().getFirstPersonRenderer().renderItemSide(p_229135_1_, p_229135_2_, p_229135_3_, flag, p_229135_5_, p_229135_6_, p_229135_7_);
          p_229135_5_.pop();
       }

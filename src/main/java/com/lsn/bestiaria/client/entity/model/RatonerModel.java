@@ -1,11 +1,12 @@
 package com.lsn.bestiaria.client.entity.model;
 
 import com.google.common.collect.ImmutableList;
+import com.lsn.bestiaria.entities.Ratoner;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
-import net.minecraft.client.renderer.entity.model.AgeableModel;
 import net.minecraft.client.renderer.entity.model.IHasArm;
 import net.minecraft.client.renderer.entity.model.IHasHead;
+import net.minecraft.client.renderer.entity.model.SegmentedModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.Hand;
@@ -16,7 +17,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraft.item.ItemStack;
 
 @OnlyIn(Dist.CLIENT)
-public class RatonerModel<T extends LivingEntity> extends AgeableModel<T> implements IHasArm, IHasHead{
+public class RatonerModel<T extends Ratoner> extends SegmentedModel<T> implements IHasArm, IHasHead{
 	public RatonerModel.ArmPose leftArmPose = RatonerModel.ArmPose.EMPTY;
 	public RatonerModel.ArmPose rightArmPose = RatonerModel.ArmPose.EMPTY;
 	
@@ -338,7 +339,7 @@ public class RatonerModel<T extends LivingEntity> extends AgeableModel<T> implem
 		modelRenderer.rotateAngleY = y;
 		modelRenderer.rotateAngleZ = z;
 	}
-	@Override
+
 	 public void setLivingAnimations(T entityIn, float limbSwing, float limbSwingAmount, float partialTick) {
 	      this.rightArmPose = RatonerModel.ArmPose.EMPTY;
 	      this.leftArmPose = RatonerModel.ArmPose.EMPTY;
@@ -353,7 +354,7 @@ public class RatonerModel<T extends LivingEntity> extends AgeableModel<T> implem
 
 	      super.setLivingAnimations(entityIn, limbSwing, limbSwingAmount, partialTick);
 	   }
-	@Override
+
 	public ModelRenderer getModelHead() {
 		return this.Head;
 	}
@@ -405,17 +406,12 @@ public class RatonerModel<T extends LivingEntity> extends AgeableModel<T> implem
 	      CROSSBOW_CHARGE,
 	      CROSSBOW_HOLD;
 	   }
-	@Override
-	protected Iterable<ModelRenderer> getHeadParts() {
-		return ImmutableList.of(this.Head);
-	}
-	@Override
-	protected Iterable<ModelRenderer> getBodyParts() {
+	   public Iterable<ModelRenderer> getParts() {
 		return ImmutableList.of(this.Arml, this.ArmLeft, this.Armr, this.ArmRight, this.Body, this.bodymid,
 				this.Bodyup, this.bone, this.bone2, this.EarLeft, this.EarRight,
 				this.Hair, this.handl, this.handr, this.legl, this.legldown,
 				this.LLeg, this.Mouth, this.legr,this.legrdown, this.mouthA,
 				this.Mouthdown, this.MouthL, this.Mouthr, this.Nose, this.RLeg, 
-				this.Tale, this.Tale2, this.Tale3, this.Tale4, this.Tale5);
+				this.Tale, this.Tale2, this.Tale3, this.Tale4, this.Tale5, this.Head);
 	}
 }
